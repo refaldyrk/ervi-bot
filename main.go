@@ -30,11 +30,6 @@ type ChatResponse struct {
 	Messages []interface{} `json:"messages"`
 }
 
-var (
-	apiURL    = "https://api.cloudflare.com/client/v4/accounts/" + viper.GetString("CF_ID") + "/ai/run/@cf/meta/llama-3.3-70b-instruct-fp8-fast"
-	authToken = "Bearer " + viper.GetString("CF_TOKEN")
-)
-
 var chatHistories = make(map[int64][]Message)
 
 func main() {
@@ -94,14 +89,12 @@ func main() {
 			Content: userInput,
 		})
 
-		// Dapatkan respons AI
 		response, err := getAIResponse(chatHistories[userID])
 		if err != nil {
 			log.Printf("Error getting AI response: %v", err)
 			return c.Reply("Waduh, aku lagi error nih. Coba lagi nanti ya~")
 		}
 
-		// Simpan respons AI ke riwayat percakapan
 		chatHistories[userID] = append(chatHistories[userID], Message{
 			Role:    "assistant",
 			Content: response,
@@ -115,6 +108,8 @@ func main() {
 }
 
 func getAIResponse(chatHistory []Message) (string, error) {
+	apiURL := "https://api.cloudflare.com/client/v4/accounts/" + viper.GetString("CF_ID") + "/ai/run/@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+	authToken := "Bearer " + viper.GetString("CF_TOKEN")
 	requestBody := ChatRequest{Messages: chatHistory}
 
 	jsonData, err := json.Marshal(requestBody)
