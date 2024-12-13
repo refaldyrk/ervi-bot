@@ -1,0 +1,6 @@
+version: '3'
+services:
+  app:
+    image: ervis
+    container_name: ervis
+    restart: always
