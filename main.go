@@ -66,6 +66,8 @@ func main() {
 
 				return nil
 			}
+
+			fmt.Println("ON GROUP", isMentioned, c.Message().ReplyTo.Sender.FirstName)
 		}
 
 		if _, exists := chatHistories[userID]; !exists {
