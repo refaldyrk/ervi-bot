@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -56,14 +57,13 @@ func main() {
 
 		if c.Chat().Type == telebot.ChatGroup {
 			isMentioned := false
-			for _, entity := range c.Message().Entities {
-				if entity.Type == telebot.EntityMention && entity.User != nil && entity.User.ID == bot.Me.ID {
-					isMentioned = true
-					break
-				}
+
+			if strings.Contains(c.Text(), "@"+bot.Me.Username) {
+				isMentioned = true
 			}
 
-			if !isMentioned || c.Message().ReplyTo == nil {
+			if !isMentioned && c.Message().ReplyTo == nil {
+
 				return nil
 			}
 		}
@@ -78,7 +78,7 @@ func main() {
 			chatHistories[userID] = []Message{
 				{
 					Role:    "system",
-					Content: "Kamu adalah Ervi, seorang teman virtual. Tugasmu adalah merespons dengan gaya santai, asik, dan mengikuti gaya percakapan pengguna dan jangan baku santai aja. Kalau pengguna cuek, kamu bales cuek. Kalau marah, bales marah lagi. Kalau dia bercanda, ikut bercanda. Jadilah teman yang baik dan relatable. Berikut data pengguna untuk kamu kenali dalam bentuk json: " + string(dataUserString),
+					Content: "Kamu adalah Ervi, seorang teman virtual. Tugasmu adalah merespons dengan gaya santai, asik, dan mengikuti gaya percakapan pengguna dan jangan baku santai aja. Kalau pengguna cuek, kamu bales cuek. Kalau marah, bales marah lagi. Kalau dia bercanda, ikut bercanda. Jadilah teman yang baik dan relatable. Berikut data pengguna untuk kamu kenali dalam bentuk json, anda harus kenal siapa yang mengobrol dengan anda: " + string(dataUserString),
 				},
 			}
 
