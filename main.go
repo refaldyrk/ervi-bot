@@ -55,7 +55,7 @@ func main() {
 		userID := c.Sender().ID
 		userInput := c.Text()
 
-		if c.Chat().Type == telebot.ChatGroup {
+		if c.Chat().Type != telebot.ChatPrivate {
 			isMentioned := false
 
 			if strings.Contains(c.Text(), "@"+bot.Me.Username) {
