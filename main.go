@@ -54,7 +54,7 @@ func main() {
 		userID := c.Sender().ID
 		userInput := c.Text()
 
-		if c.Chat().Type != telebot.ChatPrivate {
+		if c.Chat().Type == telebot.ChatGroup {
 			isMentioned := false
 			for _, entity := range c.Message().Entities {
 				if entity.Type == telebot.EntityMention && entity.User != nil && entity.User.ID == bot.Me.ID {
@@ -63,7 +63,7 @@ func main() {
 				}
 			}
 
-			if !isMentioned && c.Message().ReplyTo == nil {
+			if !isMentioned || c.Message().ReplyTo == nil {
 				return nil
 			}
 		}
